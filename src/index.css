@@ -1,0 +1,265 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global fixes */
+html, body, #root {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+@layer base {
+  :root {
+    --color-primary: 56 189 248; /* Bright blue */
+    --color-secondary: 14 165 233; /* Darker blue */
+    --color-accent: 249 115 22; /* Orange */
+    --color-success: 34 197 94; /* Green */
+    --color-warning: 234 179 8; /* Yellow */
+    --color-error: 239 68 68; /* Red */
+    --color-info: 99 102 241; /* Indigo */
+    --color-neutral-50: 249 250 251;
+    --color-neutral-100: 243 244 246;
+    --color-neutral-200: 229 231 235;
+    --color-neutral-300: 209 213 219;
+    --color-neutral-400: 156 163 175;
+    --color-neutral-500: 107 114 128;
+    --color-neutral-600: 75 85 99;
+    --color-neutral-700: 55 65 81;
+    --color-neutral-800: 31 41 55;
+    --color-neutral-900: 17 24 39;
+  }
+
+  body {
+    @apply antialiased text-gray-800 dark:text-gray-200 m-0 p-0 overflow-x-hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-3xl sm:text-4xl;
+  }
+
+  h2 {
+    @apply text-2xl sm:text-3xl;
+  }
+
+  h3 {
+    @apply text-xl sm:text-2xl;
+  }
+}
+
+@layer components {
+  /* Button styles */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-offset-2
+           inline-flex items-center justify-center shadow-sm;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 hover:bg-primary-700 text-white focus:ring-primary-500
+           hover:shadow-md hover:translate-y-[-1px];
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary-600 hover:bg-secondary-700 text-white focus:ring-secondary-500
+           hover:shadow-md hover:translate-y-[-1px];
+  }
+
+  .btn-outline {
+    @apply btn border border-gray-300 dark:border-gray-600
+           hover:bg-gray-50 dark:hover:bg-gray-800 focus:ring-gray-500
+           text-gray-700 dark:text-gray-300;
+  }
+
+  .btn-accent {
+    @apply btn bg-accent-600 hover:bg-accent-700 text-white focus:ring-accent-500
+           hover:shadow-md hover:translate-y-[-1px];
+  }
+
+  .btn-success {
+    @apply btn bg-success-600 hover:bg-success-700 text-white focus:ring-success-500
+           hover:shadow-md hover:translate-y-[-1px];
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-lg;
+  }
+
+  .btn-icon {
+    @apply p-2 rounded-full;
+  }
+
+  /* Input styles */
+  .input {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+           focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800
+           transition-colors duration-200;
+  }
+
+  .input-group {
+    @apply flex rounded-lg overflow-hidden;
+  }
+
+  .input-group .input {
+    @apply rounded-none flex-grow;
+  }
+
+  .input-group > :first-child {
+    @apply rounded-l-lg;
+  }
+
+  .input-group > :last-child {
+    @apply rounded-r-lg;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow
+           border border-gray-100 dark:border-gray-700 overflow-hidden
+           transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply hover:shadow-md hover:translate-y-[-2px];
+  }
+
+  .card-header {
+    @apply p-4 border-b border-gray-200 dark:border-gray-700 font-medium;
+  }
+
+  .card-body {
+    @apply p-4;
+  }
+
+  .card-footer {
+    @apply p-4 border-t border-gray-200 dark:border-gray-700;
+  }
+
+  /* Form styles */
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+  }
+
+  .form-error {
+    @apply text-error-600 text-sm mt-1 flex items-center;
+  }
+
+  .form-hint {
+    @apply text-gray-500 dark:text-gray-400 text-sm mt-1;
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply badge bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-300;
+  }
+
+  .badge-secondary {
+    @apply badge bg-secondary-100 text-secondary-800 dark:bg-secondary-900 dark:text-secondary-300;
+  }
+
+  .badge-success {
+    @apply badge bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-300;
+  }
+
+  .badge-warning {
+    @apply badge bg-warning-100 text-warning-800 dark:bg-warning-900 dark:text-warning-300;
+  }
+
+  .badge-error {
+    @apply badge bg-error-100 text-error-800 dark:bg-error-900 dark:text-error-300;
+  }
+
+  /* Animation classes */
+  .animate-fade-in {
+    @apply animate-[fadeIn_0.5s_ease-in-out_forwards];
+    opacity: 0;
+  }
+
+  .animate-slide-up {
+    @apply animate-[slideUp_0.5s_ease-in-out_forwards];
+    opacity: 0;
+  }
+
+  .animate-slide-up-stable {
+    @apply animate-[slideUpStable_0.5s_ease-out_forwards];
+    /* No initial opacity: 0 to prevent flicker */
+  }
+
+  .animate-slide-down {
+    @apply animate-[slideDown_0.5s_ease-in-out_forwards];
+    opacity: 0;
+  }
+
+  .animate-pulse-subtle {
+    @apply animate-[pulse_2s_ease-in-out_infinite];
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideUpStable {
+  0% { transform: translateY(10px); opacity: 0.8; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  0% { transform: translateY(-20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Leaflet map custom styles */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.leaflet-container:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.leaflet-control-zoom {
+  border-radius: 0.5rem !important;
+  overflow: hidden;
+}
+
+.leaflet-control-zoom a {
+  transition: all 0.2s ease;
+}

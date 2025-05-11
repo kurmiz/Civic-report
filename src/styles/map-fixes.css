@@ -1,0 +1,63 @@
+/* Map container fixes */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+/* Fix for marker icons */
+.leaflet-default-icon-path {
+  background-image: url(https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png);
+}
+
+/* Fix for marker shadows */
+.leaflet-default-shadow-path {
+  background-image: url(https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png);
+}
+
+/* Fix for popup content */
+.leaflet-popup-content-wrapper {
+  max-width: 300px;
+}
+
+/* Fix for map controls */
+.leaflet-control {
+  z-index: 1000;
+}
+
+/* Fix for map tiles */
+.leaflet-tile {
+  visibility: inherit !important;
+}
+
+/* Fix for map panes */
+.leaflet-pane {
+  z-index: 1;
+}
+
+/* Fix for map overlay pane */
+.leaflet-overlay-pane {
+  z-index: 4;
+}
+
+/* Fix for map shadow pane */
+.leaflet-shadow-pane {
+  z-index: 5;
+}
+
+/* Fix for map marker pane */
+.leaflet-marker-pane {
+  z-index: 6;
+}
+
+/* Fix for map tooltip pane */
+.leaflet-tooltip-pane {
+  z-index: 7;
+}
+
+/* Fix for map popup pane */
+.leaflet-popup-pane {
+  z-index: 8;
+}

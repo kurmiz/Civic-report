@@ -1,0 +1,216 @@
+/* Robot Avatar Styles */
+.robot-avatar {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Size variations */
+.robot-small {
+  width: 40px;
+  height: 40px;
+}
+
+.robot-medium {
+  width: 60px;
+  height: 60px;
+}
+
+.robot-large {
+  width: 80px;
+  height: 80px;
+}
+
+/* Robot head */
+.robot-head {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 45% 45% 40% 40%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border: 2px solid #e0e0e0;
+}
+
+/* Robot antenna */
+.robot-antenna {
+  position: absolute;
+  top: -25%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.robot-antenna.pulse {
+  animation: antenna-pulse 0.5s ease;
+}
+
+.robot-antenna-ball {
+  width: 10px;
+  height: 10px;
+  background-color: #4299e1; /* Blue color */
+  border-radius: 50%;
+  margin-bottom: 2px;
+}
+
+.robot-antenna-stem {
+  width: 3px;
+  height: 8px;
+  background-color: #a0aec0; /* Gray color */
+}
+
+/* Robot face */
+.robot-face {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a202c; /* Dark background for face */
+  border-radius: 40%;
+  padding: 5%;
+}
+
+/* Robot eyes */
+.robot-eyes {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+  margin-bottom: 10%;
+}
+
+.robot-eye {
+  width: 30%;
+  height: 0;
+  padding-bottom: 30%;
+  background-color: #4299e1; /* Blue color */
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Eye expressions */
+.robot-eyes-happy .robot-eye {
+  background-color: #4299e1; /* Blue color */
+}
+
+.robot-eyes-thinking .robot-eye {
+  background-color: #805ad5; /* Purple color */
+  transform: scaleY(0.7);
+}
+
+.robot-eyes-confused .robot-eye.left {
+  transform: scaleY(0.7);
+}
+
+.robot-eyes-confused .robot-eye.right {
+  transform: scaleY(1.2);
+}
+
+.robot-eyes-idle .robot-eye {
+  background-color: #718096; /* Gray-blue color */
+}
+
+/* Blinking animation */
+.robot-eyes.blink .robot-eye {
+  transform: scaleY(0.1);
+}
+
+/* Robot mouth */
+.robot-mouth {
+  width: 60%;
+  height: 15%;
+  background-color: #4299e1; /* Blue color */
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.robot-mouth.smile {
+  border-radius: 0 0 10px 10px;
+  transform: scaleX(1.2);
+}
+
+.robot-mouth.confused {
+  transform: rotate(-10deg);
+  width: 40%;
+}
+
+.robot-mouth.neutral {
+  width: 40%;
+}
+
+/* Robot ears/side components */
+.robot-ear {
+  position: absolute;
+  width: 15%;
+  height: 25%;
+  background-color: #4299e1; /* Blue color */
+  border-radius: 50%;
+}
+
+.robot-ear.left {
+  left: -5%;
+  top: 40%;
+}
+
+.robot-ear.right {
+  right: -5%;
+  top: 40%;
+}
+
+/* Animations */
+@keyframes antenna-pulse {
+  0% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.2);
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Floating animation for the robot */
+.robot-avatar {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .robot-small {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .robot-medium {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .robot-large {
+    width: 70px;
+    height: 70px;
+  }
+}
