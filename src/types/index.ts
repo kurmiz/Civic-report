@@ -11,7 +11,8 @@ export interface Issue {
   title: string;
   description: string;
   category: 'pothole' | 'street-light' | 'water-leak' | 'garbage' | 'sidewalk' | 'park' | 'safety' | 'other';
-  status: 'pending' | 'in-progress' | 'resolved';
+  status: 'pending' | 'in-progress' | 'resolved' | 'rejected';
+  work_completed?: boolean;
   location: string;
   lat: number;
   lng: number;

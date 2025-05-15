@@ -1,5 +1,5 @@
 // API base URL
-const API_URL = 'http://localhost:5001/api';
+const API_URL = 'http://localhost:5002/api';
 
 // Default headers
 const headers = {
@@ -16,13 +16,20 @@ const defaultOptions = {
 
 // Helper function to handle API responses
 const handleResponse = async (response: Response) => {
-  const data = await response.json();
+  try {
+    const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.message || 'Something went wrong');
+    if (!response.ok) {
+      throw new Error(data.message || 'Something went wrong');
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Network error. Please check your connection and try again.');
   }
-
-  return data;
 };
 
 // Add authorization header if token exists
@@ -42,26 +49,36 @@ const getAuthHeaders = () => {
 export const authAPI = {
   // Register a new user
   register: async (name: string, email: string, password: string) => {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ name, email, password }),
-      ...defaultOptions
-    });
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ name, email, password }),
+        ...defaultOptions
+      });
 
-    return handleResponse(response);
+      return handleResponse(response);
+    } catch (error) {
+      console.error('Registration fetch error:', error);
+      throw new Error('Network error. Please check your connection and try again.');
+    }
   },
 
   // Login user
   login: async (email: string, password: string) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ email, password }),
-      ...defaultOptions
-    });
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, password }),
+        ...defaultOptions
+      });
 
-    return handleResponse(response);
+      return handleResponse(response);
+    } catch (error) {
+      console.error('Login fetch error:', error);
+      throw new Error('Network error. Please check your connection and try again.');
+    }
   },
 
   // Get current user

@@ -34,7 +34,9 @@ const Signup = () => {
       await signup(data.name, data.email, data.password);
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'There was a problem creating your account. Please try again.');
+      // Error is already displayed by toast in AuthContext
+      // Just set form error for UI feedback
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setIsLoading(false);
     }

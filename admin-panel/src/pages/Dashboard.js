@@ -132,15 +132,34 @@ const Dashboard = () => {
     ],
   };
 
+  // Work completion chart data
+  const workCompletionData = {
+    labels: ['Completed', 'Not Completed'],
+    datasets: [
+      {
+        label: 'Work Completion Status',
+        data: [
+          stats?.counts.completedWork || 0,
+          stats?.counts.resolvedIssues - (stats?.counts.completedWork || 0)
+        ],
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.6)', // completed
+          'rgba(255, 159, 64, 0.6)', // not completed
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
     <Box sx={{ flexGrow: 1, py: 2 }}>
       <Typography variant="h4" gutterBottom>
         Dashboard
       </Typography>
-      
+
       {/* Stats Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3} lg={2}>
           <Paper
             elevation={3}
             sx={{
@@ -163,8 +182,8 @@ const Dashboard = () => {
             </Typography>
           </Paper>
         </Grid>
-        
-        <Grid item xs={12} sm={6} md={3}>
+
+        <Grid item xs={12} sm={6} md={3} lg={2}>
           <Paper
             elevation={3}
             sx={{
@@ -187,8 +206,8 @@ const Dashboard = () => {
             </Typography>
           </Paper>
         </Grid>
-        
-        <Grid item xs={12} sm={6} md={3}>
+
+        <Grid item xs={12} sm={6} md={3} lg={2}>
           <Paper
             elevation={3}
             sx={{
@@ -211,8 +230,8 @@ const Dashboard = () => {
             </Typography>
           </Paper>
         </Grid>
-        
-        <Grid item xs={12} sm={6} md={3}>
+
+        <Grid item xs={12} sm={6} md={3} lg={2}>
           <Paper
             elevation={3}
             sx={{
@@ -235,18 +254,66 @@ const Dashboard = () => {
             </Typography>
           </Paper>
         </Grid>
+
+        <Grid item xs={12} sm={6} md={3} lg={2}>
+          <Paper
+            elevation={3}
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              height: 140,
+              bgcolor: 'secondary.light',
+              color: 'white',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <CheckCircleIcon sx={{ mr: 1 }} />
+              <Typography variant="h6" component="div">
+                Work Completed
+              </Typography>
+            </Box>
+            <Typography variant="h3" component="div">
+              {stats?.counts.completedWork || 0}
+            </Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3} lg={2}>
+          <Paper
+            elevation={3}
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              height: 140,
+              bgcolor: 'error.light',
+              color: 'white',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <PendingIcon sx={{ mr: 1 }} />
+              <Typography variant="h6" component="div">
+                Pending Work
+              </Typography>
+            </Box>
+            <Typography variant="h3" component="div">
+              {(stats?.counts.resolvedIssues || 0) - (stats?.counts.completedWork || 0)}
+            </Typography>
+          </Paper>
+        </Grid>
       </Grid>
-      
+
       {/* Charts */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Paper elevation={3} sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
               Issues by Category
             </Typography>
             <Box sx={{ height: 300 }}>
-              <Bar 
-                data={categoryChartData} 
+              <Bar
+                data={categoryChartData}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
@@ -260,15 +327,37 @@ const Dashboard = () => {
             </Box>
           </Paper>
         </Grid>
-        
-        <Grid item xs={12} md={6}>
+
+        <Grid item xs={12} md={4}>
           <Paper elevation={3} sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
               Issues by Status
             </Typography>
             <Box sx={{ height: 300 }}>
-              <Bar 
-                data={statusChartData} 
+              <Bar
+                data={statusChartData}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                  },
+                }}
+              />
+            </Box>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Work Completion Status
+            </Typography>
+            <Box sx={{ height: 300 }}>
+              <Bar
+                data={workCompletionData}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
@@ -283,7 +372,7 @@ const Dashboard = () => {
           </Paper>
         </Grid>
       </Grid>
-      
+
       {/* Recent Issues and Active Users */}
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
@@ -294,8 +383,8 @@ const Dashboard = () => {
               <List sx={{ width: '100%' }}>
                 {stats?.recentIssues.map((issue) => (
                   <React.Fragment key={issue._id}>
-                    <ListItem 
-                      alignItems="flex-start" 
+                    <ListItem
+                      alignItems="flex-start"
                       button
                       onClick={() => navigate(`/issues/${issue._id}`)}
                     >
@@ -333,7 +422,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        
+
         <Grid item xs={12} md={6}>
           <Card elevation={3}>
             <CardHeader title="Most Active Users" />

@@ -93,6 +93,7 @@ exports.getAdminStats = asyncHandler(async (req, res) => {
   const pendingIssueCount = await Issue.countDocuments({ status: 'pending' });
   const resolvedIssueCount = await Issue.countDocuments({ status: 'resolved' });
   const inProgressIssueCount = await Issue.countDocuments({ status: 'in-progress' });
+  const completedWorkCount = await Issue.countDocuments({ work_completed: true });
   const commentCount = await Comment.countDocuments();
 
   // Get recent issues
@@ -166,6 +167,7 @@ exports.getAdminStats = asyncHandler(async (req, res) => {
         pendingIssues: pendingIssueCount,
         resolvedIssues: resolvedIssueCount,
         inProgressIssues: inProgressIssueCount,
+        completedWork: completedWorkCount,
         comments: commentCount
       },
       recentIssues,
@@ -263,7 +265,7 @@ exports.getAllIssues = asyncHandler(async (req, res) => {
 // @route   PUT /api/admin/issues/:id/status
 // @access  Admin
 exports.updateIssueStatus = asyncHandler(async (req, res) => {
-  const { status, adminComment } = req.body;
+  const { status, adminComment, workCompleted } = req.body;
 
   if (!status) {
     return res.status(400).json({
@@ -294,6 +296,16 @@ exports.updateIssueStatus = asyncHandler(async (req, res) => {
   // Update issue status
   issue.status = status;
   issue.updated_at = Date.now();
+
+  // Update work_completed status if provided
+  if (workCompleted !== undefined) {
+    issue.work_completed = workCompleted;
+
+    // If work is completed, automatically set status to resolved
+    if (workCompleted === true && status !== 'resolved') {
+      issue.status = 'resolved';
+    }
+  }
 
   // Add admin comment if provided
   if (adminComment) {

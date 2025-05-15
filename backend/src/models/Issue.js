@@ -27,6 +27,10 @@ const IssueSchema = new mongoose.Schema({
     enum: ['pending', 'in-progress', 'resolved', 'rejected'],
     default: 'pending'
   },
+  work_completed: {
+    type: Boolean,
+    default: false
+  },
   location: {
     type: String,
     required: [true, 'Please add a location']

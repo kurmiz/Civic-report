@@ -15,26 +15,26 @@ const adminUser = {
 };
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/citizen-report', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/citizen-report', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
 .then(async () => {
   console.log('MongoDB Connected');
-  
+
   try {
     // Check if admin user already exists
     const existingAdmin = await User.findOne({ email: adminUser.email });
-    
+
     if (existingAdmin) {
       console.log('Admin user already exists');
       process.exit(0);
     }
-    
+
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(adminUser.password, salt);
-    
+
     // Create admin user
     const user = await User.create({
       name: adminUser.name,
@@ -43,13 +43,13 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/citizen-rep
       role: adminUser.role,
       emailVerified: true
     });
-    
+
     console.log(`Admin user created: ${user.email}`);
     console.log('You can now log in to the admin panel with these credentials:');
     console.log(`Email: ${adminUser.email}`);
     console.log(`Password: ${adminUser.password}`);
     console.log('IMPORTANT: Change this password immediately after your first login!');
-    
+
     process.exit(0);
   } catch (error) {
     console.error('Error creating admin user:', error);

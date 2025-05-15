@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authAPI } from '../services/api';
+import toast from 'react-hot-toast';
 
 interface User {
   id: string;
@@ -89,6 +90,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return response;
     } catch (error) {
       console.error('Login error:', error);
+      // Show a user-friendly error message using toast
+      if (error instanceof Error) {
+        toast.error(`Login failed: ${error.message}`);
+      } else {
+        toast.error('Login failed. Please check your connection and try again.');
+      }
       throw error;
     } finally {
       setIsLoading(false);
@@ -121,6 +128,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return response;
     } catch (error) {
       console.error('Signup error:', error);
+      // Show a user-friendly error message using toast
+      if (error instanceof Error) {
+        toast.error(`Signup failed: ${error.message}`);
+      } else {
+        toast.error('Signup failed. Please check your connection and try again.');
+      }
       throw error;
     } finally {
       setIsLoading(false);

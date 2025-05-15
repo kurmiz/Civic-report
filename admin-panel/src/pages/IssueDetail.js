@@ -28,7 +28,8 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
-  Alert
+  Alert,
+  Checkbox
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -46,29 +47,30 @@ import toast from 'react-hot-toast';
 const IssueDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [issue, setIssue] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [newStatus, setNewStatus] = useState('');
   const [adminComment, setAdminComment] = useState('');
+  const [workCompleted, setWorkCompleted] = useState(false);
   const [statusUpdateLoading, setStatusUpdateLoading] = useState(false);
 
   const fetchIssueDetails = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch issue details
       const issueResponse = await api.admin.getIssue(id);
       setIssue(issueResponse.data);
-      
+
       // Fetch comments
       const commentsResponse = await api.admin.getComments(id);
       setComments(commentsResponse.data);
-      
+
       setError(null);
     } catch (err) {
       console.error('Error fetching issue details:', err);
@@ -89,6 +91,7 @@ const IssueDetail = () => {
   const handleStatusDialogOpen = () => {
     setNewStatus(issue?.status || '');
     setAdminComment('');
+    setWorkCompleted(issue?.work_completed || false);
     setStatusDialogOpen(true);
   };
 
@@ -99,16 +102,22 @@ const IssueDetail = () => {
   const handleStatusUpdate = async () => {
     try {
       setStatusUpdateLoading(true);
-      
+
       await api.admin.updateIssueStatus(id, {
         status: newStatus,
-        adminComment: adminComment.trim() ? adminComment : undefined
+        adminComment: adminComment.trim() ? adminComment : undefined,
+        workCompleted: workCompleted
       });
-      
+
       // Refresh issue details
       await fetchIssueDetails();
-      
-      toast.success(`Issue status updated to ${newStatus}`);
+
+      let successMessage = `Issue status updated to ${newStatus}`;
+      if (workCompleted) {
+        successMessage += ' and marked as work completed';
+      }
+
+      toast.success(successMessage);
       setStatusDialogOpen(false);
     } catch (err) {
       console.error('Error updating issue status:', err);
@@ -187,7 +196,7 @@ const IssueDetail = () => {
           Issue Details
         </Typography>
       </Box>
-      
+
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
@@ -195,16 +204,16 @@ const IssueDetail = () => {
               <Typography variant="h5" gutterBottom>
                 {issue.title}
               </Typography>
-              <Chip 
-                label={issue.status} 
+              <Chip
+                label={issue.status}
                 color={getStatusColor(issue.status)}
                 sx={{ textTransform: 'capitalize' }}
               />
             </Box>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-              <Chip 
-                label={issue.category} 
+              <Chip
+                label={issue.category}
                 variant="outlined"
                 size="small"
                 sx={{ mr: 2, textTransform: 'capitalize' }}
@@ -222,41 +231,41 @@ const IssueDetail = () => {
                 </Typography>
               </Box>
             </Box>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <LocationIcon fontSize="small" sx={{ mr: 0.5, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
                 {issue.location}
               </Typography>
             </Box>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
               <AccessTimeIcon fontSize="small" sx={{ mr: 0.5, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
                 Reported on {format(new Date(issue.created_at), 'PPP')}
               </Typography>
             </Box>
-            
+
             <Divider sx={{ mb: 3 }} />
-            
+
             <Typography variant="body1" paragraph>
               {issue.description}
             </Typography>
-            
+
             {issue.image_url && (
               <Box sx={{ mt: 2, mb: 3 }}>
                 <img
                   src={issue.image_url}
                   alt={issue.title}
-                  style={{ 
-                    maxWidth: '100%', 
+                  style={{
+                    maxWidth: '100%',
                     maxHeight: '400px',
                     borderRadius: '8px'
                   }}
                 />
               </Box>
             )}
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
               <Button
                 variant="contained"
@@ -267,17 +276,17 @@ const IssueDetail = () => {
               </Button>
             </Box>
           </Paper>
-          
+
           {/* Comments Section */}
           <Paper elevation={3} sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
               Comments ({comments.length})
             </Typography>
-            
+
             <List sx={{ width: '100%' }}>
               {comments.map((comment) => (
                 <React.Fragment key={comment._id}>
-                  <ListItem 
+                  <ListItem
                     alignItems="flex-start"
                     sx={{
                       bgcolor: comment.is_admin_comment ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
@@ -303,9 +312,9 @@ const IssueDetail = () => {
                             {comment.author?.name || 'Anonymous'}
                           </Typography>
                           {comment.is_admin_comment && (
-                            <Chip 
-                              label="Admin" 
-                              size="small" 
+                            <Chip
+                              label="Admin"
+                              size="small"
                               color="primary"
                               sx={{ height: 20, fontSize: '0.7rem' }}
                             />
@@ -336,7 +345,7 @@ const IssueDetail = () => {
                   <Divider variant="inset" component="li" />
                 </React.Fragment>
               ))}
-              
+
               {comments.length === 0 && (
                 <ListItem>
                   <ListItemText
@@ -348,7 +357,7 @@ const IssueDetail = () => {
             </List>
           </Paper>
         </Grid>
-        
+
         <Grid item xs={12} md={4}>
           {/* Reporter Info */}
           <Card elevation={3} sx={{ mb: 3 }}>
@@ -376,7 +385,7 @@ const IssueDetail = () => {
               )}
             </CardContent>
           </Card>
-          
+
           {/* Location Info */}
           <Card elevation={3} sx={{ mb: 3 }}>
             <CardHeader
@@ -397,27 +406,31 @@ const IssueDetail = () => {
               <Typography variant="body2" color="text.secondary">
                 Longitude: {issue.lng}
               </Typography>
-              
-              {/* Map placeholder - in a real app, you would integrate with a map component */}
+
+              {/* Map View */}
               <Box
                 sx={{
                   mt: 2,
                   height: 200,
-                  bgcolor: 'grey.200',
                   borderRadius: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  overflow: 'hidden'
                 }}
               >
-                <Typography variant="body2" color="text.secondary">
-                  Map View
-                </Typography>
+                <iframe
+                  title="Issue Location Map"
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  scrolling="no"
+                  marginHeight="0"
+                  marginWidth="0"
+                  src={`https://maps.google.com/maps?q=${issue.lat},${issue.lng}&z=15&output=embed`}
+                />
               </Box>
             </CardContent>
           </Card>
-          
-          {/* Status History - This would be implemented in a real app */}
+
+          {/* Status History and Work Completion */}
           <Card elevation={3}>
             <CardHeader
               title="Status History"
@@ -434,34 +447,64 @@ const IssueDetail = () => {
                     primary="Created"
                     secondary={format(new Date(issue.created_at), 'PPp')}
                   />
-                  <Chip 
-                    label="pending" 
-                    size="small" 
+                  <Chip
+                    label="pending"
+                    size="small"
                     color="warning"
                     sx={{ textTransform: 'capitalize' }}
                   />
                 </ListItem>
-                
+
                 {issue.status !== 'pending' && (
                   <ListItem>
                     <ListItemText
                       primary="Status Updated"
                       secondary={format(new Date(issue.updated_at), 'PPp')}
                     />
-                    <Chip 
-                      label={issue.status} 
-                      size="small" 
+                    <Chip
+                      label={issue.status}
+                      size="small"
                       color={getStatusColor(issue.status)}
                       sx={{ textTransform: 'capitalize' }}
                     />
                   </ListItem>
                 )}
+
+                {issue.work_completed && (
+                  <ListItem>
+                    <ListItemText
+                      primary="Work Completed"
+                      secondary={format(new Date(issue.updated_at), 'PPp')}
+                    />
+                    <Chip
+                      label="Completed"
+                      size="small"
+                      color="success"
+                    />
+                  </ListItem>
+                )}
               </List>
+
+              {issue.status === 'resolved' && !issue.work_completed && (
+                <Box sx={{ mt: 2, p: 1, bgcolor: 'warning.light', borderRadius: 1 }}>
+                  <Typography variant="body2" color="warning.contrastText">
+                    Issue is marked as resolved but work is not yet marked as completed.
+                  </Typography>
+                </Box>
+              )}
+
+              {issue.work_completed && (
+                <Box sx={{ mt: 2, p: 1, bgcolor: 'success.light', borderRadius: 1 }}>
+                  <Typography variant="body2" color="success.contrastText">
+                    Work has been completed for this issue.
+                  </Typography>
+                </Box>
+              )}
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-      
+
       {/* Status Update Dialog */}
       <Dialog open={statusDialogOpen} onClose={handleStatusDialogClose}>
         <DialogTitle>Update Issue Status</DialogTitle>
@@ -469,7 +512,7 @@ const IssueDetail = () => {
           <DialogContentText>
             Change the status of this issue and optionally add an admin comment.
           </DialogContentText>
-          
+
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel>Status</InputLabel>
             <Select
@@ -483,7 +526,22 @@ const IssueDetail = () => {
               <MenuItem value="rejected">Rejected</MenuItem>
             </Select>
           </FormControl>
-          
+
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+            <FormControl component="fieldset">
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Checkbox
+                  checked={workCompleted}
+                  onChange={(e) => setWorkCompleted(e.target.checked)}
+                  color="primary"
+                />
+                <Typography>
+                  Mark work as completed
+                </Typography>
+              </Box>
+            </FormControl>
+          </Box>
+
           <TextField
             margin="dense"
             label="Admin Comment (optional)"
@@ -497,8 +555,8 @@ const IssueDetail = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleStatusDialogClose}>Cancel</Button>
-          <Button 
-            onClick={handleStatusUpdate} 
+          <Button
+            onClick={handleStatusUpdate}
             variant="contained"
             disabled={!newStatus || statusUpdateLoading}
           >
